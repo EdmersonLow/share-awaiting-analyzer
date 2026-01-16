@@ -84,13 +84,14 @@ def parse_share_awaiting_file(file_path):
                     'account_type_code': current_account['account_type_code'],
                     'contra_flag': current_account['contra_flag'],
                     'security_name': row[2],
-                    'traded_currency' : row[3],
+                    'traded_currency' : row[4],
                     'quantity': row[6],
                     'settle_currency': row[7],
                     'settle_amount': row[8],
                     'days': row[9],
                     'payment_ref': row[11],
                     'margin_pu': row[12],
+                    'giro': row[14]
                 }
                 transactions.append(transaction)
             except:
@@ -135,6 +136,9 @@ def analyze_transaction(row):
     days = convert_days_to_int(row['days'])
     account_type = row['account_type_code']
     contra_flag = row['contra_flag']
+
+    if row['giro'] == 'B' and normalize_currency(row['settle_currency']) == 'SGD':
+        return None
     
     # Check margin accounts
     if account_type in ['V', 'M']:
@@ -158,8 +162,9 @@ def analyze_transaction(row):
     if days is None:
         return None
     
-    if row['traded_currency'] != row['settle_currency']: return 'REMINDER'
-    
+    if row['traded_currency'] != row['settle_currency']:
+            return 'REMINDER'
+
     if is_local:
         if days >= 2: return 'FORCE_SELLING'
         elif days == 1: return 'REMINDER'
