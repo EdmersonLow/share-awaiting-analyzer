@@ -84,6 +84,7 @@ def parse_share_awaiting_file(file_path):
                     'account_type_code': current_account['account_type_code'],
                     'contra_flag': current_account['contra_flag'],
                     'security_name': row[2],
+                    'traded_currency' : row[3],
                     'quantity': row[6],
                     'settle_currency': row[7],
                     'settle_amount': row[8],
@@ -156,6 +157,8 @@ def analyze_transaction(row):
     
     if days is None:
         return None
+    
+    if row['traded_currency'] != row['settle_currency']: return 'REMINDER'
     
     if is_local:
         if days >= 2: return 'FORCE_SELLING'
