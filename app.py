@@ -103,6 +103,7 @@ def normalize_currency(currency):
     if pd.isna(currency): return 'UNKNOWN'
     currency = str(currency).strip().upper()
     if currency in ['S$', 'SGD', 'SG']: return 'SGD'
+    elif currency in ['YEN']: return 'JPY'
     elif currency in ['US$', 'USD', 'US']: return 'USD'
     elif currency in ['MYR', 'MY', 'RM']: return 'MYR'
     elif currency in ['HK$', 'HKD', 'HK']: return 'HKD'
@@ -140,6 +141,8 @@ def analyze_transaction(row):
     if row['giro'] == 'B' and normalize_currency(row['settle_currency']) == 'SGD':
         return None
     
+    print(currency)
+    
     # Check margin accounts
     if account_type in ['V', 'M']:
         margin_pu = str(row.get('margin_pu', '')).strip().upper()
@@ -169,6 +172,7 @@ def analyze_transaction(row):
         if days >= 2: return 'FORCE_SELLING'
         elif days == 1: return 'REMINDER'
     elif is_foreign:
+        print(is_foreign)
         if days >= 1: return 'FORCE_SELLING'
         elif days == 0: return 'REMINDER'
     
@@ -225,27 +229,6 @@ def create_excel_output(df_action, df_messages_reminder, df_messages_forcesell):
 st.title("📊 Share Awaiting Account Analyzer")
 st.markdown("Upload your Share Awaiting Excel file to generate action items and client messages")
 
-# # Sidebar
-# with st.sidebar:
-#     st.header("ℹ️ About")
-#     st.markdown("""
-#     This tool analyzes share awaiting accounts and generates:
-#     - **Reminder messages for Contra / Settlement** for Day 1 (LOCAL) / Day 0 (FOREIGN)
-#     - **Force selling alerts** for Day 2+ (LOCAL) / Day 1+ (FOREIGN)
-    
-#     ### Business Logic:
-#     - ✅ Checks Payment Reference
-#     - ✅ Checks Margin PU for V/M accounts
-#     - ✅ Applies currency-specific rules
-#     - ✅ Generates ready-to-send messages
-#     """)
-    
-#     st.header("🌍 Currencies")
-#     st.markdown(f"""
-#     **Local:** {', '.join(LOCAL_CURRENCIES)}
-    
-#     **Foreign:** {', '.join(FOREIGN_CURRENCIES)}
-#     """)
 
 # File upload
 uploaded_file = st.file_uploader(
