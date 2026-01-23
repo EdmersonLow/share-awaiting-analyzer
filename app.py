@@ -108,6 +108,9 @@ def normalize_currency(currency):
     elif currency in ['MYR', 'MY', 'RM']: return 'MYR'
     elif currency in ['HK$', 'HKD', 'HK']: return 'HKD'
     elif currency in ['CDN', 'CAD', 'C$']: return 'CAD'
+    elif currency in ['CDN', 'CAD', 'C$']: return 'CAD'
+    elif currency in ['RMB']: return 'CNY'
+
     return currency
 
 def convert_days_to_int(days_value):
