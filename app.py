@@ -14,7 +14,6 @@ st.set_page_config(
 
 # Configuration
 LOCAL_CURRENCIES = ['SGD', 'MYR']
-FOREIGN_CURRENCIES = ['USD', 'CAD', 'EUR', 'GBP', 'JPY', 'AUD', 'HKD', 'CNY']
 
 # ============================================================================
 # PROCESSING FUNCTIONS (From your notebook)
@@ -103,14 +102,7 @@ def normalize_currency(currency):
     if pd.isna(currency): return 'UNKNOWN'
     currency = str(currency).strip().upper()
     if currency in ['S$', 'SGD', 'SG']: return 'SGD'
-    elif currency in ['YEN']: return 'JPY'
-    elif currency in ['US$', 'USD', 'US']: return 'USD'
     elif currency in ['MYR', 'MY', 'RM']: return 'MYR'
-    elif currency in ['HK$', 'HKD', 'HK']: return 'HKD'
-    elif currency in ['CDN', 'CAD', 'C$']: return 'CAD'
-    elif currency in ['CDN', 'CAD', 'C$']: return 'CAD'
-    elif currency in ['RMB']: return 'CNY'
-
     return currency
 
 def convert_days_to_int(days_value):
@@ -163,7 +155,7 @@ def analyze_transaction(row):
         return None
     
     is_local = currency in LOCAL_CURRENCIES
-    is_foreign = currency in FOREIGN_CURRENCIES
+    is_foreign = currency not in LOCAL_CURRENCIES
     
     if days is None:
         return None
