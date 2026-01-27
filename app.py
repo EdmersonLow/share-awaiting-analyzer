@@ -102,7 +102,7 @@ def normalize_currency(currency):
     if pd.isna(currency): return 'UNKNOWN'
     currency = str(currency).strip().upper()
     if currency in ['S$', 'SGD', 'SG']: return 'SGD'
-    elif currency in ['MYR', 'MY', 'RM']: return 'MYR'
+    elif currency in ['MYR', 'MY', 'RM','M$']: return 'MYR'
     return currency
 
 def convert_days_to_int(days_value):
